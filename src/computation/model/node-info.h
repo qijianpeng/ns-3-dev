@@ -48,8 +48,8 @@ using namespace rapidjson;
 //           current system avaliable resources.
 class SysInfo{
   public:
-    static const uint64_t DEFAULT_AVALIABLE_CPU = 10000l;
-    static const uint64_t DEFAULT_AVALIABLE_MEM = 10000l;
+    static const uint64_t DEFAULT_AVALIABLE_CPU = 1000l;
+    static const uint64_t DEFAULT_AVALIABLE_MEM = 1000l;
 
     SysInfo(const uint64_t cpu, const uint64_t mem);
     SysInfo(const SysInfo& si);
@@ -88,6 +88,8 @@ class SysInfo{
         writer.Uint64(_cpu);
         writer.String("mem");
         writer.Uint64(_mem);
+        writer.String("uuid");
+        writer.Uint64(_uuid);
         writer.EndObject();
     }
     std::string Serialize(){
@@ -99,6 +101,7 @@ class SysInfo{
     void DeSerialize(const rapidjson::Value & obj){
       this->_cpu = obj["cpu"].GetUint64();
       this->_mem = obj["mem"].GetUint64();
+      this->_uuid = obj["uuid"].GetUint64();
     }
     void DeSerialize(const std::string &str){
       rapidjson::Document doc;
@@ -111,6 +114,10 @@ class SysInfo{
     }
     uint64_t getMem(){
       return _mem;
+    }
+    uint64_t getUuid()
+    {
+      return _uuid;
     }
   /**
    * Output streamer.
@@ -136,6 +143,7 @@ class SysInfo{
   private:
     uint64_t _cpu;
     uint64_t _mem;
+    uint64_t _uuid; //uuid of this node. Different from `Node::GetId()`.
 };
  std::ostream &operator << (std::ostream &os, const SysInfo &sysinfo);
  std::istream &operator >> (std::istream &is, SysInfo &sysinfo);
